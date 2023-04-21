@@ -8,6 +8,6 @@ fun Fragment.navigator():Navigator{
 interface Navigator {
     fun goBack()
     fun showNotionsListFragment()
-    fun showNotionInfoFragment()
+    fun showNotionInfoFragment(notionId:Int)
     fun showNotionEditFragment()
 }

@@ -1,17 +1,35 @@
 package com.example.notions.views
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.*
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.room.Room
+import androidx.room.RoomDatabase
 import com.example.notions.R
 import com.example.notions.contract.navigator
+import com.example.notions.dao.NotionDao
+import com.example.notions.database.NotionDatabase
+import com.example.notions.databinding.FragmentNotionInfoBinding
+import com.example.notions.entity.Notion
+import kotlin.concurrent.thread
 
 class NotionInfoFragment : Fragment(){
 
+    private var notionId:Int = 0
+    lateinit var binding: FragmentNotionInfoBinding
+    lateinit var db: RoomDatabase
+    lateinit var notionDao: NotionDao
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        db= Room.databaseBuilder(requireContext(), NotionDatabase::class.java, "notions").build()
+        notionDao= (db as NotionDatabase).notionDao()
         setHasOptionsMenu(true)
+        arguments?.let{
+            notionId=it.getInt(NOTION_ID)
+        }
     }
 
 
@@ -41,8 +59,14 @@ class NotionInfoFragment : Fragment(){
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_notion_info, container, false)
+        binding=FragmentNotionInfoBinding.inflate(inflater,container,false)
+        setUpUi()
+        return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        setUpUi()
     }
 
 //    override fun getCustomAction(): List<CustomAction> {
@@ -62,9 +86,30 @@ class NotionInfoFragment : Fragment(){
 //        )
 //    }
 
+    private fun setUpUi(){
+        val uiHandler= Handler(Looper.getMainLooper())
+        var notion:Notion=Notion("","")
+        thread{
+            notion=notionDao.getNotionById(notionId)
+        }
+        uiHandler.post {
+            binding.titleTextView.text=notion.title
+            binding.textTextView.text=notion.text
+        }
+    }
 
-//    companion object {
-//        @JvmStatic
-//        fun newInstance(){}
-//    }
+
+    companion object {
+        @JvmStatic
+        private var NOTION_ID="NOTION_ID"
+
+        @JvmStatic
+        fun newInstance(notionId:Int):NotionInfoFragment{
+            val arguments = Bundle()
+            arguments.putInt(NOTION_ID, notionId)
+            val fragment = NotionInfoFragment()
+            fragment.arguments = arguments
+            return fragment
+        }
+    }
 }

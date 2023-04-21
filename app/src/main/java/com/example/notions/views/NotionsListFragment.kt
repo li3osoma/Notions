@@ -13,11 +13,12 @@ import com.example.notions.contract.navigator
 import com.example.notions.dao.NotionDao
 import com.example.notions.database.NotionDatabase
 import com.example.notions.databinding.FragmentNotionsListBinding
+import com.example.notions.service.NotionClickListener
 import com.example.notions.service.NotionsListAdapter
 import kotlin.concurrent.thread
 
 
-class NotionsListFragment : Fragment(){
+class NotionsListFragment : Fragment(),NotionClickListener{
 
     lateinit var binding:FragmentNotionsListBinding
     lateinit var adapter:NotionsListAdapter
@@ -62,13 +63,11 @@ class NotionsListFragment : Fragment(){
         super.onResume()
         setUpRecyclerView()
     }
-
-
     private fun setUpRecyclerView(){
 
         val uiHandler= Handler(Looper.getMainLooper())
         thread{
-            adapter=NotionsListAdapter()
+            adapter=NotionsListAdapter(this)
             adapter.notions=notionDao.getNotionsList()
         }
         uiHandler.post {
@@ -77,4 +76,10 @@ class NotionsListFragment : Fragment(){
             binding.recyclerView.layoutManager=layoutManager
         }
     }
+
+    override fun openChosen(notionId: Int) {
+        navigator().showNotionInfoFragment(notionId)
+    }
+
 }
+
