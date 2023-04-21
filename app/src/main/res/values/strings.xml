@@ -8,4 +8,6 @@
     <string name="save">Save</string>
     <string name="save_notification">Notion is saved</string>
     <string name="delete_notification">Notion is deleted</string>
+    <string name="notion_title">Title</string>
+    <string name="notion_text">Text</string>
 </resources>

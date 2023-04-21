@@ -5,10 +5,7 @@ import android.view.*
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.notions.R
-import com.example.notions.contract.CustomAction
-import com.example.notions.contract.HasCustomAction
 import com.example.notions.contract.navigator
-import kotlinx.coroutines.delay
 
 class NotionInfoFragment : Fragment(){
 
@@ -32,8 +29,8 @@ class NotionInfoFragment : Fragment(){
                 true
             }
             R.id.deleteButton -> {
-                navigator().goBack()
                 Toast.makeText(requireContext(),R.string.delete_notification,Toast.LENGTH_SHORT).show()
+                navigator().goBack()
                 true
             }
             else -> false
