@@ -1,11 +1,15 @@
 package com.example.notions.views
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.text.Editable
 import android.view.*
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.util.copy
 import com.example.notions.R
 import com.example.notions.contract.navigator
 import com.example.notions.dao.NotionDao
@@ -16,6 +20,7 @@ import kotlin.concurrent.thread
 
 class NotionEditFragment : Fragment(){
 
+    private var notionId:Int = 0
     lateinit var binding:FragmentNotionEditBinding
     lateinit var db: RoomDatabase
     lateinit var notionDao: NotionDao
@@ -25,6 +30,9 @@ class NotionEditFragment : Fragment(){
         db= Room.databaseBuilder(requireContext(), NotionDatabase::class.java, "notions").build()
         notionDao= (db as NotionDatabase).notionDao()
         setHasOptionsMenu(true)
+        arguments?.let{
+            notionId=it.getInt(NotionEditFragment.NOTION_ID)
+        }
     }
 
     @Deprecated("Deprecated in Java")
@@ -55,15 +63,54 @@ class NotionEditFragment : Fragment(){
         savedInstanceState: Bundle?
     ): View {
         binding= FragmentNotionEditBinding.inflate(inflater,container,false)
+        if(notionId!=-1) setUpUi()
         return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if(notionId!=-1) setUpUi()
     }
 
     private fun saveNotion(){
         val title = binding.titleEditText.text.toString()
         val text=binding.textEditText.text.toString()
 
+        if(notionId==-1) {
+            thread {
+                notionDao.insert(Notion(title, text))
+            }
+        }
+        else{
+            thread {
+                notionDao.updateById(notionId,title,text)
+            }
+        }
+    }
+
+    private fun setUpUi(){
+        val uiHandler= Handler(Looper.getMainLooper())
+        var notion:Notion=Notion("","")
         thread{
-            notionDao.insert(Notion(title, text))
+            notion=notionDao.getNotionById(notionId)
+        }
+        uiHandler.post {
+            binding.titleEditText.text=notion.title.toEditable()
+            binding.textEditText.text=notion.text.toEditable()
+        }
+    }
+    fun String.toEditable(): Editable =  Editable.Factory.getInstance().newEditable(this)
+    companion object {
+        @JvmStatic
+        private var NOTION_ID="NOTION_ID"
+
+        @JvmStatic
+        fun newInstance(notionId:Int):NotionEditFragment{
+            val arguments = Bundle()
+            arguments.putInt(NOTION_ID, notionId)
+            val fragment = NotionEditFragment()
+            fragment.arguments = arguments
+            return fragment
         }
     }
 }

@@ -76,8 +76,8 @@ class MainActivity : AppCompatActivity(),Navigator{
         launchFragment(NotionInfoFragment.newInstance(notionId))
     }
 
-    override fun showNotionEditFragment() {
-        launchFragment(NotionEditFragment())
+    override fun showNotionEditFragment(notionId: Int) {
+        launchFragment(NotionEditFragment.newInstance(notionId))
     }
 
     fun updateUi(){

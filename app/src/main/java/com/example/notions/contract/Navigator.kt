@@ -9,5 +9,5 @@ interface Navigator {
     fun goBack()
     fun showNotionsListFragment()
     fun showNotionInfoFragment(notionId:Int)
-    fun showNotionEditFragment()
+    fun showNotionEditFragment(notionId: Int)
 }

@@ -43,10 +43,11 @@ class NotionInfoFragment : Fragment(){
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when(item.itemId){
             R.id.editButton -> {
-                navigator().showNotionEditFragment()
+                navigator().showNotionEditFragment(notionId)
                 true
             }
             R.id.deleteButton -> {
+                deleteNotion()
                 Toast.makeText(requireContext(),R.string.delete_notification,Toast.LENGTH_SHORT).show()
                 navigator().goBack()
                 true
@@ -67,6 +68,15 @@ class NotionInfoFragment : Fragment(){
     override fun onResume() {
         super.onResume()
         setUpUi()
+    }
+
+    private fun deleteNotion(){
+        val title = binding.titleTextView.text.toString()
+        val text=binding.textTextView.text.toString()
+
+        thread {
+            notionDao.deleteById(notionId)
+        }
     }
 
 //    override fun getCustomAction(): List<CustomAction> {

@@ -43,7 +43,7 @@ class NotionsListFragment : Fragment(),NotionClickListener{
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when(item.itemId){
             R.id.addButton -> {
-                navigator().showNotionEditFragment()
+                navigator().showNotionEditFragment(-1)
                 true
             }
             else -> false
@@ -55,7 +55,7 @@ class NotionsListFragment : Fragment(),NotionClickListener{
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentNotionsListBinding.inflate(inflater,container,false)
-        //setUpRecyclerView()
+        setUpRecyclerView()
         return binding.root
     }
 
@@ -63,6 +63,7 @@ class NotionsListFragment : Fragment(),NotionClickListener{
         super.onResume()
         setUpRecyclerView()
     }
+
     private fun setUpRecyclerView(){
 
         val uiHandler= Handler(Looper.getMainLooper())
@@ -78,7 +79,10 @@ class NotionsListFragment : Fragment(),NotionClickListener{
     }
 
     override fun openChosen(notionId: Int) {
-        navigator().showNotionInfoFragment(notionId)
+        thread {
+            if(!notionDao.getNotionById(notionId).equals(null))
+                navigator().showNotionInfoFragment(notionId)
+        }
     }
 
 }

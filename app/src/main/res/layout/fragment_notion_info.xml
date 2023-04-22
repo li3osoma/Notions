@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".views.NotionInfoFragment"
-    android:padding="20dp">
+    android:padding="20dp"
+    android:background="@color/white">
 
     <TextView
         android:id="@+id/titleTextView"
@@ -14,13 +15,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/black"
-        android:textSize="20sp"
+        android:textSize="25sp"
         android:layout_marginBottom="20dp"/>
 
     <TextView
         android:id="@+id/textTextView"
         android:textColor="@color/black"
-        android:textSize="15sp"
+        android:textSize="20sp"
         app:layout_constraintTop_toBottomOf="@id/titleTextView"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_width="match_parent"
