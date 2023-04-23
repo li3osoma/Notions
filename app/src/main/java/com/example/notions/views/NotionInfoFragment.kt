@@ -1,5 +1,6 @@
 package com.example.notions.views
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -24,7 +25,7 @@ class NotionInfoFragment : Fragment(){
     lateinit var notionDao: NotionDao
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        db= Room.databaseBuilder(requireContext(), NotionDatabase::class.java, "notions").build()
+        db= Room.databaseBuilder(requireContext(), NotionDatabase::class.java, "notions1").build()
         notionDao= (db as NotionDatabase).notionDao()
         setHasOptionsMenu(true)
         arguments?.let{
@@ -71,9 +72,6 @@ class NotionInfoFragment : Fragment(){
     }
 
     private fun deleteNotion(){
-        val title = binding.titleTextView.text.toString()
-        val text=binding.textTextView.text.toString()
-
         thread {
             notionDao.deleteById(notionId)
         }
@@ -96,6 +94,7 @@ class NotionInfoFragment : Fragment(){
 //        )
 //    }
 
+    @SuppressLint("SetTextI18n")
     private fun setUpUi(){
         val uiHandler= Handler(Looper.getMainLooper())
         var notion:Notion=Notion("","")
@@ -105,6 +104,7 @@ class NotionInfoFragment : Fragment(){
         uiHandler.post {
             binding.titleTextView.text=notion.title
             binding.textTextView.text=notion.text
+            binding.dateTextView.text="Last changes: ${notion.date}"
         }
     }
 

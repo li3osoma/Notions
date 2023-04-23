@@ -9,13 +9,14 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import androidx.room.util.copy
 import com.example.notions.R
 import com.example.notions.contract.navigator
 import com.example.notions.dao.NotionDao
 import com.example.notions.database.NotionDatabase
 import com.example.notions.databinding.FragmentNotionEditBinding
 import com.example.notions.entity.Notion
+import java.text.SimpleDateFormat
+import java.util.*
 import kotlin.concurrent.thread
 
 class NotionEditFragment : Fragment(){
@@ -27,7 +28,7 @@ class NotionEditFragment : Fragment(){
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        db= Room.databaseBuilder(requireContext(), NotionDatabase::class.java, "notions").build()
+        db= Room.databaseBuilder(requireContext(), NotionDatabase::class.java, "notions1").build()
         notionDao= (db as NotionDatabase).notionDao()
         setHasOptionsMenu(true)
         arguments?.let{
@@ -75,15 +76,18 @@ class NotionEditFragment : Fragment(){
     private fun saveNotion(){
         val title = binding.titleEditText.text.toString()
         val text=binding.textEditText.text.toString()
+        val currentDate: Date = Date()
+        val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
+        val dateText = dateFormat.format(currentDate)
 
         if(notionId==-1) {
             thread {
-                notionDao.insert(Notion(title, text))
+                notionDao.insert(Notion(title, text, dateText))
             }
         }
         else{
             thread {
-                notionDao.updateById(notionId,title,text)
+                notionDao.updateById(notionId,title,text, dateText)
             }
         }
     }

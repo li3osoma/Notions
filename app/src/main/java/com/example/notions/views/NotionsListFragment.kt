@@ -27,7 +27,7 @@ class NotionsListFragment : Fragment(),NotionClickListener{
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        db= Room.databaseBuilder(requireContext(), NotionDatabase::class.java, "notions").build()
+        db= Room.databaseBuilder(requireContext(), NotionDatabase::class.java, "notions1").build()
         notionDao= (db as NotionDatabase).notionDao()
         setUpRecyclerView()
         setHasOptionsMenu(true)
@@ -79,10 +79,7 @@ class NotionsListFragment : Fragment(),NotionClickListener{
     }
 
     override fun openChosen(notionId: Int) {
-        thread {
-            if(!notionDao.getNotionById(notionId).equals(null))
-                navigator().showNotionInfoFragment(notionId)
-        }
+        navigator().showNotionInfoFragment(notionId)
     }
 
 }

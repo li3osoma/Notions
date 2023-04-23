@@ -10,4 +10,5 @@
     <string name="delete_notification">Notion is deleted</string>
     <string name="notion_title">Title</string>
     <string name="notion_text">Text</string>
+    <string name="date_example">YYYY.MM.DD</string>
 </resources>

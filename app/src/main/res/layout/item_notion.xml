@@ -28,4 +28,14 @@
         android:textSize="15sp"
         android:text="@string/notion_text"/>
 
+    <TextView
+        android:id="@+id/notionDate"
+        app:layout_constraintEnd_toEndOf="@id/notionHead"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="@string/date_example"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textSize="15sp"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
