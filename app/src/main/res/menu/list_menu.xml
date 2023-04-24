@@ -2,7 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/menuButton"
+        android:icon="@drawable/ic_menu"
+        app:showAsAction="always"
+        android:title="@string/menu" />
+    <item
         android:id="@+id/addButton"
         android:icon="@drawable/ic_add"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="ifRoom"
+        android:title="@string/add" />
 </menu>

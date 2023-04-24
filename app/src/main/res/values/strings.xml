@@ -6,9 +6,15 @@
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
     <string name="save">Save</string>
+    <string name="menu">Menu</string>
     <string name="save_notification">Notion is saved</string>
     <string name="delete_notification">Notion is deleted</string>
     <string name="notion_title">Title</string>
     <string name="notion_text">Text</string>
     <string name="date_example">YYYY.MM.DD</string>
+
+    <string name="my_notions">My notions</string>
+    <string name="my_tasks">My tasks</string>
+    <string name="my_trackers">My trackers</string>
+    <string name="my_folders">My folders</string>
 </resources>
