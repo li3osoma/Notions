@@ -1,7 +1,7 @@
-package com.example.notions.dao
+package com.example.notions.notions.dao
 
 import androidx.room.*
-import com.example.notions.entity.Notion
+import com.example.notions.notions.entity.Notion
 
 @Dao
 interface NotionDao {
@@ -9,7 +9,7 @@ interface NotionDao {
     fun getNotionsList():List<Notion>
 
     @Query("SELECT * FROM notions1 WHERE ID = :id")
-    fun getNotionById(id:Int):Notion
+    fun getNotionById(id:Int): Notion
 
     @Insert
     fun insert(notion: Notion)

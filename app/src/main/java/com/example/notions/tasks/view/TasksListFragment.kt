@@ -1,38 +1,26 @@
-package com.example.notions.views
+package com.example.notions.tasks.view
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.*
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.room.Room
-import androidx.room.RoomDatabase
 import com.example.notions.R
+import com.example.notions.contract.ListFragment
 import com.example.notions.contract.navigator
-import com.example.notions.dao.NotionDao
-import com.example.notions.database.NotionDatabase
-import com.example.notions.databinding.FragmentNotionsListBinding
-import com.example.notions.service.NotionClickListener
-import com.example.notions.service.NotionsListAdapter
-import kotlin.concurrent.thread
+import com.example.notions.databinding.FragmentTasksListBinding
 
 
-class NotionsListFragment : Fragment(),NotionClickListener{
+class TasksListFragment : Fragment(),ListFragment {
 
-    lateinit var binding:FragmentNotionsListBinding
-    lateinit var adapter:NotionsListAdapter
-    lateinit var db: RoomDatabase
-    lateinit var notionDao: NotionDao
+    private lateinit var binding: FragmentTasksListBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        db= Room.databaseBuilder(requireContext(), NotionDatabase::class.java, "notions1").build()
-        notionDao= (db as NotionDatabase).notionDao()
-        setUpRecyclerView()
-        //setUpMenu()
         setHasOptionsMenu(true)
+//        arguments?.let {
+//            param1 = it.getString(ARG_PARAM1)
+//            param2 = it.getString(ARG_PARAM2)
+//        }
     }
 
     @Deprecated("Deprecated in Java")
@@ -45,7 +33,7 @@ class NotionsListFragment : Fragment(),NotionClickListener{
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when(item.itemId){
             R.id.addButton -> {
-                navigator().showNotionEditFragment(-1)
+                navigator().showTaskInfoFragment()
                 true
             }
             R.id.menuButton ->{
@@ -56,58 +44,42 @@ class NotionsListFragment : Fragment(),NotionClickListener{
         }
     }
 
-    private fun showDrawerLayout(){
-        binding.drawerLayout.openDrawer(GravityCompat.START)
-    }
-
-    private fun closeDrawerLayout(){
-        binding.drawerLayout.closeDrawer(GravityCompat.START)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentNotionsListBinding.inflate(inflater,container,false)
+        binding=FragmentTasksListBinding.inflate(inflater,container,false)
         setUpMenu()
-        setUpRecyclerView()
         return binding.root
     }
 
     override fun onResume() {
         super.onResume()
         setUpMenu()
-        setUpRecyclerView()
     }
 
-    private fun setUpRecyclerView(){
-
-        val uiHandler= Handler(Looper.getMainLooper())
-        thread{
-            adapter=NotionsListAdapter(this)
-            adapter.notions=notionDao.getNotionsList()
-        }
-        uiHandler.post {
-            binding.recyclerView.adapter=adapter
-            val layoutManager= LinearLayoutManager(context)
-            binding.recyclerView.layoutManager=layoutManager
-        }
+    override fun setUpRecyclerView() {
+        TODO("Not yet implemented")
     }
 
-    private fun setUpMenu(){
-        binding.apply {
+    override fun setUpMenu() {
+        binding.apply{
             navigationView.setNavigationItemSelectedListener {
                 when(it.itemId){
                     R.id.itemNotions -> {
                         closeDrawerLayout()
+                        navigator().showNotionsListFragment()
                         true
                     }
                     R.id.itemTasks -> {
                         closeDrawerLayout()
+                        navigator().showTasksListFragment()
                         true
                     }
                     R.id.itemTrackers -> {
                         closeDrawerLayout()
+                        navigator().showTrackersListFragment()
                         true
                     }
                     R.id.itemFolders-> {
@@ -120,9 +92,22 @@ class NotionsListFragment : Fragment(),NotionClickListener{
         }
     }
 
-    override fun openChosen(notionId: Int) {
-        navigator().showNotionInfoFragment(notionId)
+    override fun showDrawerLayout(){
+        binding.drawerLayout.openDrawer(GravityCompat.START)
     }
 
-}
+    override fun closeDrawerLayout(){
+        binding.drawerLayout.closeDrawer(GravityCompat.START)
+    }
 
+//    companion object {
+//        @JvmStatic
+//        fun newInstance(param1: String, param2: String) =
+//            TasksListFragment().apply {
+//                arguments = Bundle().apply {
+//                    putString(ARG_PARAM1, param1)
+//                    putString(ARG_PARAM2, param2)
+//                }
+//            }
+//    }
+}

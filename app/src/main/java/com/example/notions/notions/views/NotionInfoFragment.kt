@@ -1,4 +1,4 @@
-package com.example.notions.views
+package com.example.notions.notions.views
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -10,14 +10,15 @@ import androidx.fragment.app.Fragment
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.notions.R
+import com.example.notions.contract.InfoFragment
 import com.example.notions.contract.navigator
-import com.example.notions.dao.NotionDao
-import com.example.notions.database.NotionDatabase
+import com.example.notions.notions.dao.NotionDao
+import com.example.notions.database.NotionsDatabase
 import com.example.notions.databinding.FragmentNotionInfoBinding
-import com.example.notions.entity.Notion
+import com.example.notions.notions.entity.Notion
 import kotlin.concurrent.thread
 
-class NotionInfoFragment : Fragment(){
+class NotionInfoFragment : Fragment(),InfoFragment{
 
     private var notionId:Int = 0
     lateinit var binding: FragmentNotionInfoBinding
@@ -25,8 +26,8 @@ class NotionInfoFragment : Fragment(){
     lateinit var notionDao: NotionDao
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        db= Room.databaseBuilder(requireContext(), NotionDatabase::class.java, "notions1").build()
-        notionDao= (db as NotionDatabase).notionDao()
+        db= Room.databaseBuilder(requireContext(), NotionsDatabase::class.java, "notions1").build()
+        notionDao= (db as NotionsDatabase).notionDao()
         setHasOptionsMenu(true)
         arguments?.let{
             notionId=it.getInt(NOTION_ID)
@@ -48,8 +49,8 @@ class NotionInfoFragment : Fragment(){
                 true
             }
             R.id.deleteButton -> {
-                deleteNotion()
-                Toast.makeText(requireContext(),R.string.delete_notification,Toast.LENGTH_SHORT).show()
+                deleteItem()
+                Toast.makeText(requireContext(),R.string.delete_notion_notification,Toast.LENGTH_SHORT).show()
                 navigator().goBack()
                 true
             }
@@ -71,7 +72,7 @@ class NotionInfoFragment : Fragment(){
         setUpUi()
     }
 
-    private fun deleteNotion(){
+    override fun deleteItem(){
         thread {
             notionDao.deleteById(notionId)
         }
@@ -95,9 +96,9 @@ class NotionInfoFragment : Fragment(){
 //    }
 
     @SuppressLint("SetTextI18n")
-    private fun setUpUi(){
+    override fun setUpUi(){
         val uiHandler= Handler(Looper.getMainLooper())
-        var notion:Notion=Notion("","")
+        var notion: Notion = Notion("","")
         thread{
             notion=notionDao.getNotionById(notionId)
         }
@@ -114,7 +115,7 @@ class NotionInfoFragment : Fragment(){
         private var NOTION_ID="NOTION_ID"
 
         @JvmStatic
-        fun newInstance(notionId:Int):NotionInfoFragment{
+        fun newInstance(notionId:Int): NotionInfoFragment {
             val arguments = Bundle()
             arguments.putInt(NOTION_ID, notionId)
             val fragment = NotionInfoFragment()

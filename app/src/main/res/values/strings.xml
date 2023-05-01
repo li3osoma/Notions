@@ -7,8 +7,17 @@
     <string name="delete">Delete</string>
     <string name="save">Save</string>
     <string name="menu">Menu</string>
-    <string name="save_notification">Notion is saved</string>
-    <string name="delete_notification">Notion is deleted</string>
+
+
+    <string name="save_notion_notification">Notion is saved</string>
+    <string name="delete_notion_notification">Notion is deleted</string>
+    <string name="save_tracker_notification">Tracker is saved</string>
+    <string name="delete_tracker_notification">Tracker is deleted</string>
+    <string name="save_task_notification">Task is saved</string>
+    <string name="delete_task_notification">Task is deleted</string>
+    <string name="save_folder_notification">Folder is saved</string>
+    <string name="delete_folder_notification">Folder is deleted</string>
+
     <string name="notion_title">Title</string>
     <string name="notion_text">Text</string>
     <string name="date_example">YYYY.MM.DD</string>
@@ -17,4 +26,9 @@
     <string name="my_tasks">My tasks</string>
     <string name="my_trackers">My trackers</string>
     <string name="my_folders">My folders</string>
+
+    <string name="empty_notion">Notion is empty</string>
+    <string name="empty_task">Task is empty</string>
+    <string name="empty_tracker">Tracker is empty</string>
+
 </resources>

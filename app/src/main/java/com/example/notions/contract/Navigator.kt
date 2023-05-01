@@ -7,7 +7,16 @@ fun Fragment.navigator():Navigator{
 
 interface Navigator {
     fun goBack()
+
     fun showNotionsListFragment()
     fun showNotionInfoFragment(notionId:Int)
     fun showNotionEditFragment(notionId: Int)
+
+    fun showTrackersListFragment()
+    fun showTrackerInfoFragment()
+    fun showTrackerEditFragment()
+
+    fun showTasksListFragment()
+    fun showTaskInfoFragment()
+    fun showTaskEditFragment()
 }

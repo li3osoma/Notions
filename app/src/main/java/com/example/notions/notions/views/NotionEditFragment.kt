@@ -1,4 +1,4 @@
-package com.example.notions.views
+package com.example.notions.notions.views
 
 import android.os.Bundle
 import android.os.Handler
@@ -10,16 +10,17 @@ import androidx.fragment.app.Fragment
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.notions.R
+import com.example.notions.contract.EditFragment
 import com.example.notions.contract.navigator
-import com.example.notions.dao.NotionDao
-import com.example.notions.database.NotionDatabase
+import com.example.notions.notions.dao.NotionDao
+import com.example.notions.database.NotionsDatabase
 import com.example.notions.databinding.FragmentNotionEditBinding
-import com.example.notions.entity.Notion
+import com.example.notions.notions.entity.Notion
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.concurrent.thread
 
-class NotionEditFragment : Fragment(){
+class NotionEditFragment : Fragment(),EditFragment{
 
     private var notionId:Int = 0
     lateinit var binding:FragmentNotionEditBinding
@@ -28,11 +29,11 @@ class NotionEditFragment : Fragment(){
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        db= Room.databaseBuilder(requireContext(), NotionDatabase::class.java, "notions1").build()
-        notionDao= (db as NotionDatabase).notionDao()
+        db= Room.databaseBuilder(requireContext(), NotionsDatabase::class.java, "notions1").build()
+        notionDao= (db as NotionsDatabase).notionDao()
         setHasOptionsMenu(true)
         arguments?.let{
-            notionId=it.getInt(NotionEditFragment.NOTION_ID)
+            notionId=it.getInt(NOTION_ID)
         }
     }
 
@@ -46,9 +47,7 @@ class NotionEditFragment : Fragment(){
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when(item.itemId){
             R.id.saveButton -> {
-                saveNotion()
-                Toast.makeText(requireContext(),R.string.save_notification,Toast.LENGTH_SHORT).show()
-                navigator().goBack()
+                saveItem()
                 true
             }
             else -> false
@@ -73,28 +72,13 @@ class NotionEditFragment : Fragment(){
         if(notionId!=-1) setUpUi()
     }
 
-    private fun saveNotion(){
-        val title = binding.titleEditText.text.toString()
-        val text=binding.textEditText.text.toString()
-        val currentDate: Date = Date()
-        val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
-        val dateText = dateFormat.format(currentDate)
-
-        if(notionId==-1) {
-            thread {
-                notionDao.insert(Notion(title, text, dateText))
-            }
-        }
-        else{
-            thread {
-                notionDao.updateById(notionId,title,text, dateText)
-            }
-        }
-    }
-
-    private fun setUpUi(){
+    override fun setUpUi(){
         val uiHandler= Handler(Looper.getMainLooper())
-        var notion:Notion=Notion("","")
+        var notion: Notion = Notion("","")
+        if(notionId == -1){
+            binding.titleEditText.hint = resources.getString(R.string.notion_title).toEditable()
+            binding.textEditText.hint= resources.getString(R.string.notion_text).toEditable()
+        }
         thread{
             notion=notionDao.getNotionById(notionId)
         }
@@ -103,13 +87,46 @@ class NotionEditFragment : Fragment(){
             binding.textEditText.text=notion.text.toEditable()
         }
     }
+
+    override fun saveItem(){
+        var title = binding.titleEditText.text.toString()
+        var text=binding.textEditText.text.toString()
+
+        if(title == "" && text == "") {
+            Toast.makeText(requireContext(), R.string.empty_notion, Toast.LENGTH_SHORT).show()
+        }
+        else {
+            if (title == "") title = "<no title>"
+            if(text == "") text = "<no text>"
+
+
+            val currentDate: Date = Date()
+            val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
+            val dateText = dateFormat.format(currentDate)
+
+            if(notionId==-1) {
+                thread {
+                    notionDao.insert(Notion(title, text, dateText))
+                }
+            }
+            else{
+                thread {
+                    notionDao.updateById(notionId,title,text, dateText)
+                }
+            }
+            Toast.makeText(requireContext(),R.string.save_notion_notification,Toast.LENGTH_SHORT).show()
+            //CRUTCH
+            navigator().goBack()
+        }
+    }
+
     fun String.toEditable(): Editable =  Editable.Factory.getInstance().newEditable(this)
     companion object {
         @JvmStatic
         private var NOTION_ID="NOTION_ID"
 
         @JvmStatic
-        fun newInstance(notionId:Int):NotionEditFragment{
+        fun newInstance(notionId:Int): NotionEditFragment {
             val arguments = Bundle()
             arguments.putInt(NOTION_ID, notionId)
             val fragment = NotionEditFragment()

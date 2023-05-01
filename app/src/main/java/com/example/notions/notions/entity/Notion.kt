@@ -1,4 +1,4 @@
-package com.example.notions.entity
+package com.example.notions.notions.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

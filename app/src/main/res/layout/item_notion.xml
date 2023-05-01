@@ -3,7 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:padding="20dp"
+    android:paddingTop="20dp"
+    android:paddingStart="20dp"
+    android:paddingEnd="20dp"
     android:background="@color/white">
 
     <TextView
@@ -14,8 +16,7 @@
         app:layout_constraintStart_toStartOf="parent"
         android:text="@string/notion_title"
         android:textColor="@color/black"
-        android:textSize="20sp"
-        android:layout_marginBottom="10dp"/>
+        android:textSize="20sp"/>
 
     <TextView
         android:layout_marginTop="15dp"
@@ -35,7 +36,14 @@
         android:text="@string/date_example"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/black"
-        android:textSize="15sp"/>
+        android:textColor="@color/gray"
+        android:textSize="10sp"/>
+
+    <androidx.constraintlayout.widget.Barrier
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/barrier"
+        app:constraint_referenced_ids="notionBody"
+        app:barrierDirection="bottom"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

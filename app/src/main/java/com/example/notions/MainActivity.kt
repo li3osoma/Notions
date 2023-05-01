@@ -8,9 +8,15 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.example.notions.contract.Navigator
 import com.example.notions.databinding.ActivityMainBinding
-import com.example.notions.views.NotionEditFragment
-import com.example.notions.views.NotionInfoFragment
-import com.example.notions.views.NotionsListFragment
+import com.example.notions.notions.views.NotionEditFragment
+import com.example.notions.notions.views.NotionInfoFragment
+import com.example.notions.notions.views.NotionsListFragment
+import com.example.notions.tasks.view.TaskEditFragment
+import com.example.notions.tasks.view.TaskInfoFragment
+import com.example.notions.tasks.view.TasksListFragment
+import com.example.notions.trackers.views.TrackerEditFragment
+import com.example.notions.trackers.views.TrackerInfoFragment
+import com.example.notions.trackers.views.TrackersListFragment
 
 class MainActivity : AppCompatActivity(),Navigator{
 
@@ -19,12 +25,12 @@ class MainActivity : AppCompatActivity(),Navigator{
         super.onCreate(savedInstanceState)
         binding= ActivityMainBinding.inflate(layoutInflater)
         //setSupportActionBar(binding.toolbar)
-
+        supportActionBar!!.title= resources.getString(R.string.my_notions)
         setContentView(binding.root)
         if(savedInstanceState==null){
             supportFragmentManager
                 .beginTransaction()
-                .add(R.id.fragmentContainerView, NotionsListFragment(),null)
+                .add(R.id.fragmentContainerView, NotionsListFragment(),"home")
                 .setReorderingAllowed(true)
                 .commit()
         }
@@ -47,11 +53,23 @@ class MainActivity : AppCompatActivity(),Navigator{
         return true
     }
 
-    private fun launchFragment(fragment: Fragment){
+    private fun launchSideFragment(fragment: Fragment){
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.fragmentContainerView, fragment)
             .addToBackStack(null)
+            .commit()
+    }
+
+    private fun launchMainFragment(fragment: Fragment){
+        supportFragmentManager
+            .beginTransaction()
+            .remove(supportFragmentManager.findFragmentByTag("home")!!)
+            .commit()
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.fragmentContainerView, fragment,"home")
+            .setReorderingAllowed(true)
             .commit()
     }
 
@@ -69,15 +87,42 @@ class MainActivity : AppCompatActivity(),Navigator{
     }
 
     override fun showNotionsListFragment() {
-        launchFragment(NotionsListFragment())
+        launchMainFragment(NotionsListFragment())
+        supportActionBar!!.title= resources.getString(R.string.my_notions)
     }
 
     override fun showNotionInfoFragment(notionId:Int) {
-        launchFragment(NotionInfoFragment.newInstance(notionId))
+        launchSideFragment(NotionInfoFragment.newInstance(notionId))
     }
 
     override fun showNotionEditFragment(notionId: Int) {
-        launchFragment(NotionEditFragment.newInstance(notionId))
+        launchSideFragment(NotionEditFragment.newInstance(notionId))
+    }
+
+    override fun showTrackersListFragment() {
+        launchMainFragment(TrackersListFragment())
+        supportActionBar!!.title= resources.getString(R.string.my_trackers)
+    }
+
+    override fun showTrackerInfoFragment() {
+        launchSideFragment(TrackerInfoFragment())
+    }
+
+    override fun showTrackerEditFragment() {
+        launchSideFragment(TrackerEditFragment())
+    }
+
+    override fun showTasksListFragment() {
+        launchMainFragment(TasksListFragment())
+        supportActionBar!!.title=resources.getString(R.string.my_tasks)
+    }
+
+    override fun showTaskInfoFragment() {
+        launchSideFragment(TaskInfoFragment())
+    }
+
+    override fun showTaskEditFragment() {
+        launchSideFragment(TaskEditFragment())
     }
 
     fun updateUi(){

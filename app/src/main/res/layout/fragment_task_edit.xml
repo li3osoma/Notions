@@ -14,19 +14,20 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:textSize="23sp"
-        android:textColorHint="@color/gray"
+        android:hint="@string/notion_title"
+        android:text="Task Edit"
+        android:textSize="20sp"
         android:textColor="@color/black"/>
 
     <EditText
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="10dp"
         android:id="@+id/textEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/titleEditText"
         app:layout_constraintStart_toStartOf="parent"
-        android:textSize="18sp"
-        android:textColorHint="@color/gray"
+        android:hint="@string/notion_text"
+        android:textSize="15sp"
         android:textColor="@color/black"/>
 
     <androidx.constraintlayout.widget.Barrier
